@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
+#include <omp.h>
+#include <iostream>
 
-struct CRSMatrix
-{
+struct CSRMatrix {
 	int n;
 	int m;
 	int nz;
@@ -15,7 +16,7 @@ class CSlauSolver {
 public:
 	CSlauSolver(void);
 
-	void SLE_Solver_CRS_BICG(CRSMatrix& A, double* b, double eps, int max_iter, double* x, int& count);
+	void SLE_Solver_CSR_BICG(CSRMatrix& A, double* b, double eps, int max_iter, double* x, int& count);
 
 	double Dot(double* a, double* b, int n);
 
@@ -25,17 +26,17 @@ public:
 
 	void Diff(double* a, double* b, int n);
 
-	void Mult(CRSMatrix& A, double* b, double* res);
+	void Mult(CSRMatrix& A, double* b, double* res);
 
-	void SolveR(CRSMatrix& A, double* z, double* b, double* r, double alfa = 1);
+	void SolveR(CSRMatrix& A, double* z, double* b, double* r, double alfa = 1);
 
-	void SolveRWithResolveX(CRSMatrix& A, double* z, double* b, double* r, double* x, double* p, double alfa = 1);
+	void SolveRWithResolveX(CSRMatrix& A, double* z, double* b, double* r, double* x, double* p, double alfa = 1);
 
-	void SolveRT(CRSMatrix& A, double* z, double* b, double* r, double alfa = 1);
+	void SolveRT(CSRMatrix& A, double* z, double* b, double* r, double alfa = 1);
 
-	int GetRowIndex(CRSMatrix& A, int index);
+	int GetRowIndex(CSRMatrix& A, int index);
 
-	double GetAlfaAndCopyPredArrays(CRSMatrix& A, double* r, double* r_sop, double* p, double* p_sop, double* temp, double* predR, double* predR_sop, int n);
+	double GetAlfaAndCopyPredArrays(CSRMatrix& A, double* r, double* r_sop, double* p, double* p_sop, double* temp, double* predR, double* predR_sop, int n);
 
 	double GetBetta(double* r, double* r_sop, double* predR, double* predR_sop, int n);
 

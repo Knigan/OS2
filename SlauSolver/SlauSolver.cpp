@@ -1,5 +1,4 @@
 #include "SlauSolver.h"
-#include <omp.h>
 
 CSlauSolver::CSlauSolver()
 {
@@ -20,7 +19,7 @@ double CSlauSolver::Dot(double* a, double* b, int n)
 
 void CSlauSolver::Sum(double* a, double* b, int n, double alfa)
 {
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for (int i = 0; i < n; i++)
 	{
 		a[i] += b[i] * alfa;
@@ -39,13 +38,14 @@ void CSlauSolver::Sum(double* a, double* b, double* res, int n, double alfa)
 
 void CSlauSolver::Diff(double* a, double* b, int n)
 {
+#pragma omp parallel for
 	for (int i = 0; i < n; i++)
 	{
 		a[i] -= b[i];
 	}
 }
 
-void CSlauSolver::Mult(CRSMatrix& A, double* b, double* res)
+void CSlauSolver::Mult(CSRMatrix& A, double* b, double* res)
 {
 #pragma omp parallel for schedule(runtime) 
 	for (int i = 0; i < A.n; i++)
@@ -60,7 +60,7 @@ void CSlauSolver::Mult(CRSMatrix& A, double* b, double* res)
 	}
 }
 
-void CSlauSolver::SolveR(CRSMatrix& A, double* z, double* b, double* r, double alfa)
+void CSlauSolver::SolveR(CSRMatrix& A, double* z, double* b, double* r, double alfa)
 {
 #pragma omp parallel for
 	for (int i = 0; i < A.n; i++)
@@ -77,7 +77,7 @@ void CSlauSolver::SolveR(CRSMatrix& A, double* z, double* b, double* r, double a
 	}
 }
 
-void CSlauSolver::SolveRWithResolveX(CRSMatrix& A, double* z, double* b, double* r, double* x, double* p, double alfa)
+void CSlauSolver::SolveRWithResolveX(CSRMatrix& A, double* z, double* b, double* r, double* x, double* p, double alfa)
 {
 #pragma omp parallel for
 	for (int i = 0; i < A.n; i++)
@@ -95,7 +95,7 @@ void CSlauSolver::SolveRWithResolveX(CRSMatrix& A, double* z, double* b, double*
 	}
 }
 
-void CSlauSolver::SolveRT(CRSMatrix& A, double* z, double* b, double* r, double alfa)
+void CSlauSolver::SolveRT(CSRMatrix& A, double* z, double* b, double* r, double alfa)
 {
 #pragma omp parallel for
 	for (int i = 0; i < A.m; i++)
@@ -113,9 +113,9 @@ void CSlauSolver::SolveRT(CRSMatrix& A, double* z, double* b, double* r, double 
 	}
 }
 
-int CSlauSolver::GetRowIndex(CRSMatrix& A, int index)
+int CSlauSolver::GetRowIndex(CSRMatrix& A, int index)
 {
-	int res;
+	int res = 0;
 	for (int i = 0; i < A.rowPtr.size() - 1; i++)
 	{
 		if (index >= A.rowPtr[i] && index < A.rowPtr[i + 1])
@@ -170,7 +170,7 @@ bool CSlauSolver::IsEnd(double* x, int n, double eps)
 	return norma < eps;
 }
 
-double CSlauSolver::GetAlfaAndCopyPredArrays(CRSMatrix& A, double* r, double* r_sop, double* p, double* p_sop, double* temp, double* predR, double* predR_sop, int n)
+double CSlauSolver::GetAlfaAndCopyPredArrays(CSRMatrix& A, double* r, double* r_sop, double* p, double* p_sop, double* temp, double* predR, double* predR_sop, int n)
 {
 	double alfa1 = 0;
 	double alfa2 = 0;
@@ -220,7 +220,7 @@ void CSlauSolver::ResolvePandPSop(double* p, double* p_sop, double* r, double* r
 	}
 }
 
-void CSlauSolver::SLE_Solver_CRS_BICG(CRSMatrix& A, double* b, double eps, int max_iter, double* x, int& count)
+void CSlauSolver::SLE_Solver_CSR_BICG(CSRMatrix& A, double* b, double eps, int max_iter, double* x, int& count)
 {
 	int n = A.n;
 
