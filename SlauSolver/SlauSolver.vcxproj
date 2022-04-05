@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ccfeb049-4fa8-4c06-862c-0e809cfc39a5}</ProjectGuid>
+    <ProjectGuid>{dafefd27-2017-433d-a4b3-2780b7fe3b82}</ProjectGuid>
     <RootNamespace>SlauSolver</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -140,13 +140,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CGParallel.cpp" />
+    <ClCompile Include="dataGen.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SlauSolver.cpp" />
-    <ClCompile Include="SlauSolverTests.cpp" />
+    <ClCompile Include="matrixHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SlauSolver.h" />
-    <ClInclude Include="SlauSolverTests.h" />
+    <ClInclude Include="CGParallel.h" />
+    <ClInclude Include="dataGen.h" />
+    <ClInclude Include="matrixHelpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
