@@ -54,15 +54,16 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
             equal = 1;
         }
     }
+    
+    bool res = false;
     if (equal == 1) {
         printf("The result of the algorithm is NOT correct."
                 " Check your code.\n");
-        return false;
     } else {
         printf("The result of the algorithm is correct.\n");
-        return true;
+        res = true;
     }
     
     delete [] pRightPartVector;
-    
+    return res;
 }
