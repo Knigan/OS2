@@ -62,9 +62,9 @@ int main() {
             if (mSize < 17) {
                 printf("\n");
                 matrixHelpers::printMatrix(pMatrix, mSize);
+                printf("\n");
+                matrixHelpers::printVector(pVector, mSize);
             }
-            printf("\n");
-            matrixHelpers::printVector(pVector, mSize);
         }
 
     } while (count < 100);
