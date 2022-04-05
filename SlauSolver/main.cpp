@@ -9,6 +9,7 @@
 int main() {
     //Размер матрицы
     int mSize;
+    printf("Enter the matrix size\n");
     scanf_s("%d", &mSize);
     printf("Matrix size is %d\n", mSize);
     int count = 0;
@@ -58,8 +59,10 @@ int main() {
         ++count;
 
         if (count == 100) {
-            printf("\n");
-            matrixHelpers::printMatrix(pMatrix, mSize);
+            if (mSize < 17) {
+                printf("\n");
+                matrixHelpers::printMatrix(pMatrix, mSize);
+            }
             printf("\n");
             matrixHelpers::printVector(pVector, mSize);
         }
