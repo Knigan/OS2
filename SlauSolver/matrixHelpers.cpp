@@ -49,9 +49,29 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
             pRightPartVector[i] += pMatrix[i][j] * pResult[j];
         }
     }
-    for (int i = 0; i < Size; i++) {
-        if (fabs(pRightPartVector[i] - pVector[i]) - Accuracy >= std::numeric_limits<double>::epsilon()) {
-            equal = 1;
+    if (Size < 10000) //для маленьких размеров матрицы
+    {
+        for (int i = 0; i < Size; i++) 
+        {
+            if (fabs(pRightPartVector[i] - pVector[i]) - Accuracy >= std::numeric_limits<double>::epsilon()) 
+            {
+                equal = 1;
+            }
+        }
+    }
+    else//для больших размеров матрицы
+    {
+        int sum = 0;
+        for (int i = 0; i < Size; i++)
+        {
+            sum += pVector[i] * pVector[i];
+        }
+        for (int i = 0; i < Size; i++)
+        {
+            if ((fabs(pRightPartVector[i] - pVector[i])) / std::sqrt(sum) - Accuracy >= std::numeric_limits<double>::epsilon())
+            {
+                equal = 1;
+            }
         }
     }
     

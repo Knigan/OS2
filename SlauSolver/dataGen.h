@@ -8,5 +8,6 @@ struct dataGen {
     virtual ~dataGen() {}
     static int dummyDataInitialization(double** pMatrix, double* pVector, int Size);
     static int randomDataInitialization(double** pMatrix, double* pVector, int Size);
+    static int matrix_generation(double** pMatrix, double* pVector, int Size);
 };
 

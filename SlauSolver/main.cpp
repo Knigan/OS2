@@ -4,7 +4,7 @@
 #include "CGParallel.h"
 
 #define NUMBER_OF_THREADS 4
-#define ACCURACY 1.e-9
+#define ACCURACY 1.e-19
 
 int main() {
     //Размер матрицы
@@ -15,11 +15,8 @@ int main() {
     int count = 0;
     double average_time = 0;
 
-    do {
-
-        //Замер времени
-        double startTime = omp_get_wtime();
-
+    do 
+    {
         double** pMatrix; //Матрица коэффициентов (двумерная)
         double* pVector; //Правая часть линейной системы
         double* pResult; //Результирующий вектор
@@ -28,25 +25,29 @@ int main() {
         pVector = new double[mSize];
         pResult = new double[mSize];
         pMatrix = new double* [mSize];
-        for (int i = 0; i < mSize; i++) {
+        for (int i = 0; i < mSize; i++) 
+        {
             pMatrix[i] = new double[mSize];
         }
 
         //Генерация данных
-        dataGen::dummyDataInitialization(pMatrix, pVector, mSize);
+        dataGen::matrix_generation(pMatrix, pVector, mSize);
 
         //Создаём все объекты
         CGParallel* CGParallelSolver = new CGParallel();
+
+        //Замер времени
+        double startTime = omp_get_wtime();
+
         CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, ACCURACY, NUMBER_OF_THREADS);
-
-        //Идём по выбранному методу вычисления
-
-        //Проверяем результат
-        int check = matrixHelpers::testSolvingResult(pMatrix, pVector, pResult, mSize, std::sqrt(10 * ACCURACY));
-
-
+        matrixHelpers::printMatrix(pMatrix, mSize);
+        matrixHelpers::printVector(pVector, mSize);
+        matrixHelpers::printVector(pResult, mSize);
         //Потраченное время
         double finishTime = omp_get_wtime();
+
+        //Проверяем результат
+        int check = matrixHelpers::testSolvingResult(pMatrix, pVector, pResult, mSize, std::sqrt(ACCURACY*10));
 
         if (check) {
             printf("\nCalculation time: %lf seconds, dimension: %d ", finishTime - startTime, mSize);
@@ -58,14 +59,14 @@ int main() {
 
         ++count;
 
-        if (count == 100) {
+        /*if (count == 100) {
             if (mSize < 17) {
                 printf("\n");
                 matrixHelpers::printMatrix(pMatrix, mSize);
                 printf("\n");
                 matrixHelpers::printVector(pVector, mSize);
             }
-        }
+        }*/
 
     } while (count < 100);
 
