@@ -1,4 +1,10 @@
 #include "CGParallel.h"
+#include <omp.h>
+#include <cstdlib>
+#include <cmath>
+#include <cstdio>
+#include <limits>
+#include <algorithm>
 
 void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pResult, int Size, double Accuracy, int NUMBER_OF_THREADS) {
     if (NUMBER_OF_THREADS > 0)
@@ -8,7 +14,7 @@ void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pR
     double *CurrentApproximation, *PreviousApproximation;
     double *CurrentGradient, *PreviousGradient;
     double *CurrentDirection, *PreviousDirection;
-    double *Denom, *tempPointer;
+    double *Denom;
     double Step;
     int Iter = 1, MaxIter = Size + 1;
     //float Accuracy = 0.00001f;
@@ -32,18 +38,9 @@ void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pR
     {
         if (Iter > 1) 
         {
-            tempPointer = PreviousApproximation;
-            PreviousApproximation = CurrentApproximation;
-            CurrentApproximation = tempPointer;
-            //SwapPointers(PreviousApproximation, CurrentApproximation);
-            tempPointer = PreviousGradient;
-            PreviousGradient = CurrentGradient;
-            CurrentGradient = tempPointer;
-            //SwapPointers(PreviousGradient, CurrentGradient);
-            tempPointer = PreviousDirection;
-            PreviousDirection = CurrentDirection;
-            CurrentDirection = tempPointer;
-            //SwapPointers(PreviousDirection, CurrentDirection);
+            std::swap(PreviousApproximation, CurrentApproximation);
+            std::swap(PreviousGradient, CurrentGradient);
+            std::swap(PreviousDirection, CurrentDirection);
         }
         //compute gradient
 #pragma omp parallel for

@@ -1,4 +1,7 @@
 #include "matrixHelpers.h"
+#include <cstdio>
+#include <cmath>
+#include <limits>
 
 void matrixHelpers::printVector(double * matrix, int size) {
 
@@ -86,4 +89,35 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
     
     delete [] pRightPartVector;
     return res;
+}
+
+void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size)
+{
+    for (int i = 0; i < Size; i++)
+    {
+        pVector[i] = rand() / double(1000);
+        for (int j = 0; j <= i; j++)
+        {
+            if (i != j)
+            {
+                if (rand() % 10 == 0)
+                {
+                    pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
+                    pMatrix[i][j] = pMatrix[j][i] = 0.0;
+                }
+                else
+                {
+                    pMatrix[i][j] = pMatrix[j][i] = 0.0;
+                }
+            }
+            else
+            {
+                pMatrix[i][j] = rand() / double(1000);
+                if (fabs(pMatrix[i][j]) < 1.e-9)
+                {
+                    pMatrix[i][j] += 1.0;
+                }
+            }
+        }
+    }
 }

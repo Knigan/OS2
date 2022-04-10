@@ -1,12 +1,5 @@
 #pragma once
 
-#include <omp.h>
-#include <cstdlib>
-#include <cmath>
-#include <cstdio>
-#include <limits>
-#include "matrixHelpers.h"
-
 class CGParallel {
 public:
     CGParallel() : iterationsCount(0) {}

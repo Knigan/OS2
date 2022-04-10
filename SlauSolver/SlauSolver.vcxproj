@@ -143,13 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGParallel.cpp" />
-    <ClCompile Include="dataGen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrixHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGParallel.h" />
-    <ClInclude Include="dataGen.h" />
     <ClInclude Include="matrixHelpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
