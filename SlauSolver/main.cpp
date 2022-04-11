@@ -5,8 +5,8 @@
 #include <omp.h>
 #include <cmath>
 
-#define NUMBER_OF_THREADS 8
-#define ACCURACY 1e-19
+#define NUMBER_OF_THREADS 6
+#define ACCURACY 1e-9
 #define COUNT 10
 
 int main() {
@@ -41,15 +41,15 @@ int main() {
         //Замер времени
         double startTime = omp_get_wtime();
 
-        CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, ACCURACY, NUMBER_OF_THREADS);
+        CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, 0.1 * ACCURACY * ACCURACY, NUMBER_OF_THREADS);
         //Потраченное время
         double finishTime = omp_get_wtime();
 
         //Проверяем результат
-        bool check = matrixHelpers::testSolvingResult(pMatrix, pVector, pResult, mSize, std::sqrt(ACCURACY*10));
+        bool check = matrixHelpers::testSolvingResult(pMatrix, pVector, pResult, mSize, ACCURACY);
 
         if (check) {
-            printf("\n%d. Calculation time: %lf seconds, dimension: %d, ", i + 1, finishTime - startTime, mSize);
+            printf("\n%d. Calculation time: %.7lf seconds, dimension: %d, ", i + 1, finishTime - startTime, mSize);
             //Если это один из итерационных методов, то нужно вывести количество итераций
             printf("iterations count: %d\n", CGParallelSolver->get_iterationsCount());
 
@@ -84,7 +84,7 @@ int main() {
         printf("\n");
     }
 
-    printf("\nAverage time: %lf seconds\n", total_time / count);
+    printf("\nAverage time: %.7lf seconds\n", total_time / count);
 
     return 0;
 }
