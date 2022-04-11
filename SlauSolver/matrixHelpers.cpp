@@ -2,13 +2,20 @@
 #include <cstdio>
 #include <cmath>
 #include <limits>
+#include <ctime>
 
-void matrixHelpers::printVector(double * matrix, int size) {
+void matrixHelpers::printVector(double* matrix, int size) {
 
     for (int i = 0; i < size; i++) {
-        printf("%.4f ", matrix[i]);
+        if (i == 0)
+            printf("[");
+        if (i < size - 1)
+            printf("%.9f, ", matrix[i]);
+        else
+            printf("%.9f]", matrix[i]);
+        if (i % 10 == 9)
+            printf("\n");
     }
-    printf("\n");
 }
 
 void matrixHelpers::printMatrix(double **matrix, int size) {
@@ -78,21 +85,14 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
         }
     }
     
-    bool res = false;
-    if (equal == 1) {
-        printf("The result of the algorithm is NOT correct."
-                " Check your code.\n");
-    } else {
-        printf("The result of the algorithm is correct.\n");
-        res = true;
-    }
     
     delete [] pRightPartVector;
-    return res;
+    return (equal == 0);
 }
 
 void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size)
 {
+    srand(unsigned(clock()));
     for (int i = 0; i < Size; i++)
     {
         pVector[i] = rand() / double(1000);
@@ -102,7 +102,7 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
             {
                 if (rand() % 10 == 0)
                 {
-                    pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
+                    //pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
                     pMatrix[i][j] = pMatrix[j][i] = 0.0;
                 }
                 else
