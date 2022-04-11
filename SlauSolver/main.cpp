@@ -4,8 +4,6 @@
 #include <cstdio>
 #include <omp.h>
 #include <cmath>
-#include <fstream>
-#include <iomanip>
 
 #define NUMBER_OF_THREADS 8
 #define ACCURACY 1e-19
