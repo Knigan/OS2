@@ -90,11 +90,10 @@ bool matrixHelpers::testSolvingResult(CSRMatrix& matrix, double* pVector, double
     return (equal == 0);
 }
 
-void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size, CSRMatrix& matrix)
+void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size, CSRMatrix& matrix, int degree)
 {
     //srand(unsigned(clock()));
     srand(2314069263278);
-    int count = 0;
     for (int i = 0; i < Size; i++)
     {
         pVector[i] = rand() / double(1000);
@@ -102,13 +101,10 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
         {
             if (i != j)
             {
-                if (rand() % 10 == 0)
+                if (rand() % (Size * Size * Size) == 0)
                 {
                     pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
                     //pMatrix[i][j] = pMatrix[j][i] = 0.0;
-                    if (fabs(pMatrix[i][j]) >= 1.e-9) {
-                        count += 2;
-                    }
                 }
                 else
                 {
@@ -122,14 +118,11 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
                 {
                     pMatrix[i][j] += 1.0;
                 }
-                else {
-                    ++count;
-                }
             }
         }
     }
 
-    double** pMatrix2 = new double* [Size];
+    /*double** pMatrix2 = new double* [Size];
     for (int i = 0; i < Size; ++i) {
         pMatrix2[i] = new double[Size];
     }
@@ -142,6 +135,15 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
                 pMatrix2[i][j] += pMatrix[i][k] * pMatrix[k][j];
             }
         }
+    }*/
+
+    int count = 0;
+    for (int i = 0; i < Size; ++i) {
+        for (int j = 0; j < Size; ++j) {
+            if (pMatrix[i][j] >= 1.e-9) { //pMatrix2
+                ++count;
+            }
+        }
     }
 
     matrix.count = count;
@@ -152,20 +154,23 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
     int k = 0;
     for (int i = 0; i < Size; ++i) {
         for (int j = 0; j < Size; ++j) {
-            if (fabs(pMatrix2[i][j]) >= 1.e-9) {
-                matrix.values[k] = pMatrix2[i][j];
+            if (fabs(pMatrix[i][j]) >= 1.e-9) { //pMatrix2
+                matrix.values[k] = pMatrix[i][j]; //pMatrix
                 matrix.columns[k] = j;
                 matrix.rows[k] = i;
                 ++k;
                 if (k == count) {
-                    return;
+                    break;
                 }
             }
         }
+        if (k == count) {
+            break;
+        }
     }
 
-    for (int i = 0; i < Size; ++i) {
+    /*for (int i = 0; i < Size; ++i) {
         delete[] pMatrix2[i];
     }
-    delete[] pMatrix2;
+    delete[] pMatrix2;*/
 }

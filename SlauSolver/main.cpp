@@ -14,6 +14,7 @@ int main() {
     int mSize;
     printf("Enter the matrix size\n");
     scanf_s("%d", &mSize);
+    int degree = 1073676289;
     double total_time = 0.0;
     int count = 0;
     
@@ -32,7 +33,7 @@ int main() {
 
     //Генерация данных
     CSRMatrix matrix;
-    matrixHelpers::matrix_generation(pMatrix, pVector, mSize, matrix);
+    matrixHelpers::matrix_generation(pMatrix, pVector, mSize, matrix, degree);
 
     for (int i = 0; i < mSize; ++i) {
         delete[] pMatrix[i];
@@ -53,7 +54,7 @@ int main() {
         //Потраченное время
         double finishTime = omp_get_wtime();
 
-        //Проверяем результат (КОД НЕ РАБОТАЕТ ИЗ-ЗА ГЕНЕРАЦИИ НЕДИАГОНАЛЬНОЙ МАТРИЦЫ)
+        //Проверяем результат
         bool check = matrixHelpers::testSolvingResult(matrix, pVector, pResult, mSize, ACCURACY);
 
         if (check) {

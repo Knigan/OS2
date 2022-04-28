@@ -32,6 +32,6 @@ struct matrixHelpers {
     static void printVector(double* vector, int size);
     static void printMatrix(CSRMatrix& matrix, int size);
     static bool testSolvingResult(CSRMatrix& matrix, double* pVector, double* pResult, int Size, double Accuracy);
-    static void matrix_generation(double** pMatrix, double* pVector, int Size, CSRMatrix& matrix);
+    static void matrix_generation(double** pMatrix, double* pVector, int Size, CSRMatrix& matrix, int degree);
 };
 
