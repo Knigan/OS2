@@ -4,24 +4,24 @@
 #include <limits>
 #include <ctime>
 
-void matrixHelpers::printVector(double* matrix, int size) {
+void matrixHelpers::printVector(double* vector, int size) {
 
     for (int i = 0; i < size; i++) {
         if (i == 0)
             printf("[");
         if (i < size - 1)
-            printf("%.9f, ", matrix[i]);
+            printf("%.9f, ", vector[i]);
         else
-            printf("%.9f]", matrix[i]);
+            printf("%.9f]", vector[i]);
         if (i % 10 == 9)
             printf("\n");
     }
 }
 
-void matrixHelpers::printMatrix(double **matrix, int size) {
+void matrixHelpers::printMatrix(CSRMatrix& matrix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%.4f ", matrix[i][j]);
+            printf("%.4f ", matrix.at(i, j));
         }
         printf("\n");
     }
@@ -39,7 +39,7 @@ void matrixHelpers::printMatrix(double **matrix, int size) {
  * @return 
  */
 
-bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double* pResult, int Size, double Accuracy) {
+bool matrixHelpers::testSolvingResult(CSRMatrix& matrix, double* pVector, double* pResult, int Size, double Accuracy) {
     
     /* Buffer for storing the vector, that is a result of multiplication
     of the linear system matrix by the vector of unknowns */
@@ -56,7 +56,7 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
     for (int i = 0; i < Size; i++) {
         pRightPartVector[i] = 0;
         for (int j = 0; j < Size; j++) {
-            pRightPartVector[i] += pMatrix[i][j] * pResult[j];
+            pRightPartVector[i] += matrix.at(i, j) * pResult[j];
         }
     }
     if (Size < 10000) //для маленьких размеров матрицы
@@ -90,9 +90,11 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
     return (equal == 0);
 }
 
-void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size)
+void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size, CSRMatrix& matrix)
 {
-    srand(unsigned(clock()));
+    //srand(unsigned(clock()));
+    srand(2314069263278);
+    int count = 0;
     for (int i = 0; i < Size; i++)
     {
         pVector[i] = rand() / double(1000);
@@ -102,8 +104,11 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
             {
                 if (rand() % 10 == 0)
                 {
-                    //pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
-                    pMatrix[i][j] = pMatrix[j][i] = 0.0;
+                    pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
+                    //pMatrix[i][j] = pMatrix[j][i] = 0.0;
+                    if (fabs(pMatrix[i][j]) >= 1.e-9) {
+                        count += 2;
+                    }
                 }
                 else
                 {
@@ -117,7 +122,50 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
                 {
                     pMatrix[i][j] += 1.0;
                 }
+                else {
+                    ++count;
+                }
             }
         }
     }
+
+    double** pMatrix2 = new double* [Size];
+    for (int i = 0; i < Size; ++i) {
+        pMatrix2[i] = new double[Size];
+    }
+
+
+    for (int i = 0; i < Size; ++i) {
+        for (int j = 0; j < Size; ++j) {
+            pMatrix2[i][j] = 0;
+            for (int k = 0; k < Size; ++k) {
+                pMatrix2[i][j] += pMatrix[i][k] * pMatrix[k][j];
+            }
+        }
+    }
+
+    matrix.count = count;
+    matrix.values = new double[count];
+    matrix.columns = new int[count];
+    matrix.rows = new int[count];
+
+    int k = 0;
+    for (int i = 0; i < Size; ++i) {
+        for (int j = 0; j < Size; ++j) {
+            if (fabs(pMatrix2[i][j]) >= 1.e-9) {
+                matrix.values[k] = pMatrix2[i][j];
+                matrix.columns[k] = j;
+                matrix.rows[k] = i;
+                ++k;
+                if (k == count) {
+                    return;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < Size; ++i) {
+        delete[] pMatrix2[i];
+    }
+    delete[] pMatrix2;
 }

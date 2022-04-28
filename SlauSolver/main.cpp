@@ -31,7 +31,15 @@ int main() {
     }
 
     //Генерация данных
-    matrixHelpers::matrix_generation(pMatrix, pVector, mSize);
+    CSRMatrix matrix;
+    matrixHelpers::matrix_generation(pMatrix, pVector, mSize, matrix);
+
+    for (int i = 0; i < mSize; ++i) {
+        delete[] pMatrix[i];
+    }
+    delete[] pMatrix;
+
+    printf("pMatrix was deleted\n");
 
     //Создаём все объекты
     CGParallel* CGParallelSolver = new CGParallel();
@@ -41,12 +49,12 @@ int main() {
         //Замер времени
         double startTime = omp_get_wtime();
 
-        CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, 0.1 * ACCURACY * ACCURACY, NUMBER_OF_THREADS);
+        CGParallelSolver->resultCalculation(matrix, pVector, pResult, mSize, 0.1 * ACCURACY * ACCURACY, NUMBER_OF_THREADS);
         //Потраченное время
         double finishTime = omp_get_wtime();
 
-        //Проверяем результат
-        bool check = matrixHelpers::testSolvingResult(pMatrix, pVector, pResult, mSize, ACCURACY);
+        //Проверяем результат (КОД НЕ РАБОТАЕТ ИЗ-ЗА ГЕНЕРАЦИИ НЕДИАГОНАЛЬНОЙ МАТРИЦЫ)
+        bool check = matrixHelpers::testSolvingResult(matrix, pVector, pResult, mSize, ACCURACY);
 
         if (check) {
             printf("\n%d. Calculation time: %.7lf seconds, dimension: %d, ", i + 1, finishTime - startTime, mSize);

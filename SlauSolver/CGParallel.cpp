@@ -6,7 +6,7 @@
 #include <limits>
 #include <algorithm>
 
-void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pResult, int Size, double Accuracy, int NUMBER_OF_THREADS) {
+void CGParallel::resultCalculation(CSRMatrix& matrix, double* pVector, double* pResult, int Size, double Accuracy, int NUMBER_OF_THREADS) {
     if (NUMBER_OF_THREADS > 0)
     {
         omp_set_num_threads(NUMBER_OF_THREADS);
@@ -49,7 +49,7 @@ void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pR
             CurrentGradient[i] = -pVector[i];
             for (int j = 0; j < Size; j++)
             {
-                CurrentGradient[i] += pMatrix[i][j] * PreviousApproximation[j];
+                CurrentGradient[i] += matrix.at(i, j) * PreviousApproximation[j];
             }
         }
         //compute direction
@@ -75,7 +75,7 @@ void CGParallel::resultCalculation(double** pMatrix, double* pVector, double* pR
             Denom[i] = 0;
             for (int j = 0; j < Size; j++)
             {
-                Denom[i] += pMatrix[i][j] * CurrentDirection[j];
+                Denom[i] += matrix.at(i, j) * CurrentDirection[j];
             }
             IP1 += CurrentDirection[i] * CurrentGradient[i];
             IP2 += CurrentDirection[i] * Denom[i];
