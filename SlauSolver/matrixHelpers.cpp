@@ -101,7 +101,7 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
         {
             if (i != j)
             {
-                if (rand() % (Size * Size * Size) == 0)
+                if (rand() % degree == 0)
                 {
                     pMatrix[i][j] = pMatrix[j][i] = rand() / double(1000);
                     //pMatrix[i][j] = pMatrix[j][i] = 0.0;
