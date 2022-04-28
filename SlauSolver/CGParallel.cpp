@@ -16,7 +16,7 @@ void CGParallel::resultCalculation(CSRMatrix& matrix, double* pVector, double* p
     double *CurrentDirection, *PreviousDirection;
     double *Denom;
     double Step;
-    int Iter = 1, MaxIter = Size + 1;
+    int Iter = 1;
     //float Accuracy = 0.00001f;
     //Allocating memory
     CurrentApproximation = new double[Size];
@@ -91,7 +91,7 @@ void CGParallel::resultCalculation(CSRMatrix& matrix, double* pVector, double* p
         Iter++;
     } while
         ((diff(PreviousApproximation, CurrentApproximation, Size) - Accuracy >= std::numeric_limits<double>::epsilon())
-            && (Iter < MaxIter));
+            && (Iter <= Size));
     for (int i = 0; i < Size; i++)
     {
         pResult[i] = CurrentApproximation[i];

@@ -122,7 +122,7 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
         }
     }
 
-    /*double** pMatrix2 = new double* [Size];
+    double** pMatrix2 = new double* [Size];
     for (int i = 0; i < Size; ++i) {
         pMatrix2[i] = new double[Size];
     }
@@ -130,17 +130,23 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
 
     for (int i = 0; i < Size; ++i) {
         for (int j = 0; j < Size; ++j) {
-            pMatrix2[i][j] = 0;
+            /*pMatrix2[i][j] = 0;
             for (int k = 0; k < Size; ++k) {
                 pMatrix2[i][j] += pMatrix[i][k] * pMatrix[k][j];
+            }*/
+            if (i == j) {
+                pMatrix2[i][j] = pMatrix[i][j] * pMatrix[i][j];
+            }
+            else {
+                pMatrix2[i][j] = 0.0;
             }
         }
-    }*/
+    }
 
     int count = 0;
     for (int i = 0; i < Size; ++i) {
         for (int j = 0; j < Size; ++j) {
-            if (pMatrix[i][j] >= 1.e-9) { //pMatrix2
+            if (pMatrix2[i][j] >= 1.e-9) {
                 ++count;
             }
         }
@@ -154,8 +160,8 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
     int k = 0;
     for (int i = 0; i < Size; ++i) {
         for (int j = 0; j < Size; ++j) {
-            if (fabs(pMatrix[i][j]) >= 1.e-9) { //pMatrix2
-                matrix.values[k] = pMatrix[i][j]; //pMatrix
+            if (fabs(pMatrix2[i][j]) >= 1.e-9) {
+                matrix.values[k] = pMatrix2[i][j];
                 matrix.columns[k] = j;
                 matrix.rows[k] = i;
                 ++k;
