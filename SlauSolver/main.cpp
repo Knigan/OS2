@@ -7,9 +7,9 @@
 #include <string>
 
 #define ACCURACY 1e-9
-#define COUNT 10
+#define COUNT 20
 
-double testing(int mSize, int number_of_threads = 0) {
+double testing(int mSize, FILE* TestFile, int number_of_threads = 0) {
     double* pVector = new double[mSize];
     double* pResult = new double[mSize];
 
@@ -42,8 +42,10 @@ double testing(int mSize, int number_of_threads = 0) {
 
         if (check) {
             printf("\n%d. Calculation time: %.7lf seconds, dimension: %d, ", i + 1, finishTime - startTime, mSize);
-            //Если это один из итерационных методов, то нужно вывести количество итераций
             printf("iterations count: %d, number of threads: %d\n", CGParallelSolver->get_iterationsCount(), number_of_threads);
+            
+            fprintf(TestFile, "\n%d. Calculation time: %.7lf seconds, dimension: %d, ", i + 1, finishTime - startTime, mSize);
+            fprintf(TestFile, "iterations count: %d, number of threads: %d\n", CGParallelSolver->get_iterationsCount(), number_of_threads);
 
             total_time += finishTime - startTime;
             ++count;
@@ -73,15 +75,11 @@ double testing(int mSize, int number_of_threads = 0) {
         fclose(file);
     }
 
-    if (mSize < 257) {
-        printf("\nSolution: ");
-        matrixHelpers::printVector(pResult, mSize);
-        printf("\n");
-    }
-
     double average_time = total_time / count;
 
-    printf("\nAverage time for %d threads: %.7lf seconds\n", number_of_threads, average_time);
+    printf("\n\nAverage time for %d threads: %.7lf seconds\n\n", number_of_threads, average_time);
+    fprintf(TestFile, "\n\nAverage time for %d threads: %.7lf seconds\n\n", number_of_threads, average_time);
+
     return average_time;
 }
 
@@ -95,28 +93,24 @@ int main() {
     double* pVector; //Правая часть линейной системы
     double* pResult; //Результирующий вектор
 
-    //Инициализация массивов для адекватной работы с памятью (N+1 элементов)
+    FILE* TestFile;
+    fopen_s(&TestFile, "Tests.txt", "w+t");
 
-    FILE* file;
-    fopen_s(&file, "Tests.txt", "w+t");
-
-    if (file != nullptr) {
-        for (int k = 0; k < 12; ++k) {
-            if (k == 0) {
-                fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 1, testing(mSize, 1));
-            }
-            else {
-                if (k == 3) {
-                    fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 6, testing(mSize, 6));
-                }
-                if (k == 4) {
-                    fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 12, testing(mSize, 12));
-                }
-
-                fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 2 << (k - 1), testing(mSize, 2 << (k - 1)));
-            }
+    for (int k = 0; k < 12; ++k) {
+        if (k == 0) {
+            testing(mSize, TestFile, 1);
         }
-        fclose(file);
+        else {
+            if (k == 3) {
+                testing(mSize, TestFile, 6);
+            }
+
+            if (k == 4) {
+                testing(mSize, TestFile, 12);
+            }
+
+            testing(mSize, TestFile, 1 << k);
+        }
     }
 
     return 0;
