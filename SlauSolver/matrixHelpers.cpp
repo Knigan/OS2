@@ -52,41 +52,39 @@ bool matrixHelpers::testSolvingResult(CSRMatrix& matrix, double* pVector, double
 
     //double Accuracy = 1.e-4; // Comparison accuracy
 
-    pRightPartVector = new double [Size];
+    pRightPartVector = new double[Size];
     for (int i = 0; i < Size; i++) {
         pRightPartVector[i] = 0;
         for (int j = 0; j < Size; j++) {
             pRightPartVector[i] += matrix.at(i, j) * pResult[j];
         }
     }
-    if (Size < 10000) //для маленьких размеров матрицы
+
+    double sum = 0.0;
+    for (int i = 0; i < Size; i++)
     {
-        for (int i = 0; i < Size; i++) 
-        {
-            if (fabs(pRightPartVector[i] - pVector[i]) - Accuracy >= std::numeric_limits<double>::epsilon()) 
-            {
-                equal = 1;
-            }
+        sum += (pRightPartVector[i] - pVector[i]) * (pRightPartVector[i] - pVector[i]);
+    }
+
+    if (Size < 10000) //для маленьких размеров матрицы // евклидова норма
+    {
+        if (sum - Accuracy * Accuracy >= std::numeric_limits<double>::epsilon()) { //remember
+            equal = 1;
         }
     }
     else//для больших размеров матрицы
     {
-        int sum = 0;
+        int sum2 = 0;
         for (int i = 0; i < Size; i++)
         {
-            sum += pVector[i] * pVector[i];
+            sum2 += pVector[i] * pVector[i];
         }
-        for (int i = 0; i < Size; i++)
-        {
-            if ((fabs(pRightPartVector[i] - pVector[i])) / std::sqrt(sum) - Accuracy >= std::numeric_limits<double>::epsilon())
-            {
-                equal = 1;
-            }
+        if (sum - Accuracy * Accuracy * sum2 >= std::numeric_limits<double>::epsilon()) {
+            equal = 1;
         }
     }
-    
-    
-    delete [] pRightPartVector;
+
+    delete[] pRightPartVector;
     return (equal == 0);
 }
 
@@ -130,16 +128,16 @@ void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Siz
 
     for (int i = 0; i < Size; ++i) {
         for (int j = 0; j < Size; ++j) {
-            /*pMatrix2[i][j] = 0;
+            pMatrix2[i][j] = 0;
             for (int k = 0; k < Size; ++k) {
                 pMatrix2[i][j] += pMatrix[i][k] * pMatrix[k][j];
-            }*/
-            if (i == j) {
+            }
+            /*if (i == j) {
                 pMatrix2[i][j] = pMatrix[i][j] * pMatrix[i][j];
             }
             else {
                 pMatrix2[i][j] = 0.0;
-            }
+            }*/
         }
     }
 
