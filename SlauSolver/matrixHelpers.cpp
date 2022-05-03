@@ -40,7 +40,7 @@ void matrixHelpers::printMatrix(double **matrix, int size) {
  */
 
 bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double* pResult, int Size, double Accuracy) {
-    
+
     /* Buffer for storing the vector, that is a result of multiplication
     of the linear system matrix by the vector of unknowns */
 
@@ -52,41 +52,39 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
 
     //double Accuracy = 1.e-4; // Comparison accuracy
 
-    pRightPartVector = new double [Size];
+    pRightPartVector = new double[Size];
     for (int i = 0; i < Size; i++) {
         pRightPartVector[i] = 0;
         for (int j = 0; j < Size; j++) {
             pRightPartVector[i] += pMatrix[i][j] * pResult[j];
         }
     }
-    if (Size < 10000) //для маленьких размеров матрицы
+
+    double sum = 0.0;
+    for (int i = 0; i < Size; i++)
     {
-        for (int i = 0; i < Size; i++) 
-        {
-            if (fabs(pRightPartVector[i] - pVector[i]) - Accuracy >= std::numeric_limits<double>::epsilon()) 
-            {
-                equal = 1;
-            }
+        sum += (pRightPartVector[i] - pVector[i]) * (pRightPartVector[i] - pVector[i]);
+    }
+
+    if (Size < 10000) //для маленьких размеров матрицы // евклидова норма
+    {
+        if (sum - Accuracy * Accuracy >= std::numeric_limits<double>::epsilon()) { //remember
+            equal = 1;
         }
     }
     else//для больших размеров матрицы
     {
-        int sum = 0;
+        int sum2 = 0;
         for (int i = 0; i < Size; i++)
         {
-            sum += pVector[i] * pVector[i];
+            sum2 += pVector[i] * pVector[i];
         }
-        for (int i = 0; i < Size; i++)
-        {
-            if ((fabs(pRightPartVector[i] - pVector[i])) / std::sqrt(sum) - Accuracy >= std::numeric_limits<double>::epsilon())
-            {
-                equal = 1;
-            }
+        if (sum - Accuracy * Accuracy * sum2 >= std::numeric_limits<double>::epsilon()) {
+            equal = 1;
         }
     }
-    
-    
-    delete [] pRightPartVector;
+
+    delete[] pRightPartVector;
     return (equal == 0);
 }
 

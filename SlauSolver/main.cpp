@@ -41,7 +41,7 @@ int main() {
         //Замер времени
         double startTime = omp_get_wtime();
 
-        CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, 0.1 * ACCURACY * ACCURACY, NUMBER_OF_THREADS);
+        CGParallelSolver->resultCalculation(pMatrix, pVector, pResult, mSize, ACCURACY, NUMBER_OF_THREADS);
         //Потраченное время
         double finishTime = omp_get_wtime();
 
