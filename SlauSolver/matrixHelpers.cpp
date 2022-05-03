@@ -90,7 +90,8 @@ bool matrixHelpers::testSolvingResult(double** pMatrix, double* pVector, double*
 
 void matrixHelpers::matrix_generation(double** pMatrix, double* pVector, int Size)
 {
-    srand(unsigned(clock()));
+    //srand(unsigned(clock()));
+    srand(2314069263278);
     for (int i = 0; i < Size; i++)
     {
         pVector[i] = rand() / double(1000);

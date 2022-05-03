@@ -1,0 +1,14 @@
+Average time for 1 threads is equal to 1.5790256 seconds
+Average time for 2 threads is equal to 0.7972677 seconds
+Average time for 4 threads is equal to 0.4247761 seconds
+Average time for 6 threads is equal to 0.3404819 seconds
+Average time for 16 threads is equal to 0.3333874 seconds
+Average time for 12 threads is equal to 0.3830704 seconds
+Average time for 64 threads is equal to 0.3160565 seconds
+Average time for 128 threads is equal to 0.3585906 seconds
+Average time for 256 threads is equal to 0.4433967 seconds
+Average time for 512 threads is equal to 0.6076339 seconds
+Average time for 1024 threads is equal to 1.0831946 seconds
+Average time for 2048 threads is equal to 2.2321753 seconds
+Average time for 4096 threads is equal to 5.3661542 seconds
+Average time for 8192 threads is equal to 11.6828425 seconds
