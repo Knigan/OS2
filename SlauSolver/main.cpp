@@ -101,26 +101,20 @@ int main() {
     fopen_s(&file, "Tests.txt", "w+t");
 
     if (file != nullptr) {
-        for (int i = 0; i < 14; ++i) {
-            int k;
-            if (i == 3) {
-                k = 6;
+        for (int k = 0; k < 12; ++k) {
+            if (k == 0) {
+                fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 1, testing(mSize, 1));
             }
             else {
-                if (i == 5) {
-                    k = 12;
+                if (k == 3) {
+                    fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 6, testing(mSize, 6));
                 }
-                else {
-                    if (i == 0) {
-                        k = 1;
-                    }
-                    else {
-                        k = 2 << (i - 1);
-                    }
+                if (k == 4) {
+                    fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 12, testing(mSize, 12));
                 }
-            }
 
-            fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", k, testing(mSize, k));
+                fprintf(file, "Average time for %d threads is equal to %.7lf seconds\n", 2 << (k - 1), testing(mSize, 2 << (k - 1)));
+            }
         }
         fclose(file);
     }
